@@ -55,10 +55,10 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator Load()
     {
-        Debug.Log("[GameManager] Load - Starting initial abduction");
+        Debug.Log("[GameManager] Load - Starting initial landing");
         currentState = GameState.Load;
-        yield return StartCoroutine(abductionEffect.AbductionAnim_Land());
-        Debug.Log("[GameManager] Initial abduction complete");
+        yield return StartCoroutine(abductionEffect.PlayLandingSequence());
+        Debug.Log("[GameManager] Initial landing complete");
         yield return null;
     }
 
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GameManager] === RESPAWN SEQUENCE START === Waypoint: {waypoint.name}");
         currentState = GameState.Load;
         
-        yield return StartCoroutine(abductionEffect.AbductionSequence_Respawn(waypoint.transform));
+        yield return StartCoroutine(abductionEffect.PlayRespawnSequence(waypoint.transform));
         
         currentState = GameState.Playing;
         Debug.Log("[GameManager] === RESPAWN SEQUENCE END === State: Playing");
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("[GameManager] === VICTORY SEQUENCE START ===");
         currentState = GameState.Load;
         
-        yield return StartCoroutine(abductionEffect.AbductionSequence_Victory());
+        yield return StartCoroutine(abductionEffect.PlayVictorySequence());
         
         SetGameState(GameState.Victory);
         Debug.Log("[GameManager] === VICTORY SEQUENCE END === State: Victory");

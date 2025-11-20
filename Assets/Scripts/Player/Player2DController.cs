@@ -11,7 +11,13 @@ public class Player2DController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float airControlMultiplier = 0.8f;
+
+    [Header("Jump")]
     [SerializeField] private float jumpForce = 12f;
+    [SerializeField] private float jumpCutMultiplier = 0.5f;
+    [SerializeField] private float coyoteTime = 0.15f;
+    [SerializeField] private float jumpBufferTime = 0.2f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -19,123 +25,73 @@ public class Player2DController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Grab")]
-    [SerializeField] private Transform grabPoint;    
-    [SerializeField] private float grabRange = 0.6f; 
+    [SerializeField] private Transform grabPoint;
+    [SerializeField] private float grabRange = 0.6f;
     [SerializeField] private LayerMask grabbableLayer;
     [SerializeField] private float throwForce = 7f;
 
+    [Header("References")]
+    [SerializeField] private Animator animator;
+
     private Rigidbody2D rb;
-    private InputSystem_Actions input; 
-    private Vector2 moveInput;
-    private bool jumpRequested;
-    private bool isGrounded;
-    private bool grabHeld;
-    
-    [SerializeField] Animator animator;
-
-    private Grabbable2D grabbedObject;
-    
     private Collider2D playerCollider;
+    private InputSystem_Actions input;
+    private Grabbable2D grabbedObject;
 
-    private bool waitingRespawn = false;
+    private Vector2 moveInput;
+    private bool jumpHeld;
+    private bool isGrounded;
+    private bool wasGrounded;
+    
+    private float coyoteTimeCounter;
+    private float jumpBufferCounter;
+    
+    private bool isAbducted;
+    private bool canMove = true;
 
     private void Awake()
     {
         if (instance == null)
             instance = this;
         else
-            Destroy(this.gameObject);
-        
-        rb = GetComponent<Rigidbody2D>();
+            Destroy(gameObject);
 
-        input = new InputSystem_Actions();
-        
+        rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
-        
-        Debug.Log("[Player2DController] Awake completed");
-    }
-
-    public void CallRespawn(bool isWaitingRespawn, Vector3 position, bool isMovingPlayer = false)
-    {
-        Debug.Log($"[Player2DController] CallRespawn - Waiting: {isWaitingRespawn}, Position: {position}, Moving: {isMovingPlayer}");
-        waitingRespawn = isWaitingRespawn;
-        
-        if (waitingRespawn)
-        {
-            moveInput = Vector2.zero;
-            jumpRequested = false;
-            grabHeld = false;
-        }
-        
-        if (isMovingPlayer)
-            transform.position = position;
-    }
-
-    public void PlayerRigidbody(bool isKinematic)
-    {
-        RigidbodyType2D newType = isKinematic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
-        Debug.Log($"[Player2DController] Changing Rigidbody from {rb.bodyType} to {newType}");
-        rb.bodyType = newType;
-        
-        if (!isKinematic)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
+        input = new InputSystem_Actions();
     }
 
     private void OnEnable()
     {
         input.Enable();
-
         input.Player.Move.performed += OnMove;
         input.Player.Move.canceled += OnMove;
-
-        input.Player.Jump.performed += OnJump;
-
-        input.Player.Grab.performed += OnGrabPerformed;
-        input.Player.Grab.canceled += OnGrabCanceled;
-        
-        Debug.Log("[Player2DController] Input enabled");
+        input.Player.Jump.performed += OnJumpPressed;
+        input.Player.Jump.canceled += OnJumpReleased;
+        input.Player.Grab.performed += ctx => TryGrab();
+        input.Player.Grab.canceled += ctx => TryThrow();
     }
 
     private void OnDisable()
     {
         input.Player.Move.performed -= OnMove;
         input.Player.Move.canceled -= OnMove;
-
-        input.Player.Jump.performed -= OnJump;
-
-        input.Player.Grab.performed -= OnGrabPerformed;
-        input.Player.Grab.canceled -= OnGrabCanceled;
-
+        input.Player.Jump.performed -= OnJumpPressed;
+        input.Player.Jump.canceled -= OnJumpReleased;
         input.Disable();
-        
-        Debug.Log("[Player2DController] Input disabled");
     }
 
     private void Update()
     {
-        CheckGround();
-
-        if (!CanControlPlayer())
-        {
-            return;
-        }
-
-        if (grabHeld && grabbedObject == null)
-        {
-            TryGrab();
-        }
-        else if (!grabHeld && grabbedObject != null)
-        {
-            Throw();
-        }
+        CheckGroundState();
+        UpdateTimers();
+        HandleJump();
     }
 
     private void FixedUpdate()
     {
-        if (!CanControlPlayer())
+        if (!CanPlayerMove())
         {
             if (rb.bodyType == RigidbodyType2D.Dynamic)
             {
@@ -145,106 +101,118 @@ public class Player2DController : MonoBehaviour
             return;
         }
 
-        float targetVelX = moveInput.x * moveSpeed;
-        rb.linearVelocity = new Vector2(targetVelX, rb.linearVelocity.y);
+        HandleMovement();
+        UpdateVisuals();
+    }
 
-        animator.SetBool(IsMoving, Mathf.Abs(rb.linearVelocity.x) > 0.1f);
-        
-        if (jumpRequested)
+    private void CheckGroundState()
+    {
+        wasGrounded = isGrounded;
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
+        animator.SetBool(IsGrounded, isGrounded);
+
+        if (isGrounded && !wasGrounded)
         {
-            jumpRequested = false;
-            if (isGrounded)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            }
+            coyoteTimeCounter = coyoteTime;
         }
+    }
+
+    private void UpdateTimers()
+    {
+        if (!isGrounded)
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if (jumpBufferCounter > 0)
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+    }
+
+    private void HandleJump()
+    {
+        if (!CanPlayerMove()) return;
+
+        bool canCoyoteJump = coyoteTimeCounter > 0f;
+        bool hasJumpBuffer = jumpBufferCounter > 0f;
+
+        if (hasJumpBuffer && canCoyoteJump)
+        {
+            PerformJump();
+            jumpBufferCounter = 0f;
+        }
+
+        if (!jumpHeld && rb.linearVelocity.y > 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
+        }
+    }
+
+    private void PerformJump()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        coyoteTimeCounter = 0f;
+    }
+
+    private void HandleMovement()
+    {
+        float controlMultiplier = isGrounded ? 1f : airControlMultiplier;
+        float targetVelX = moveInput.x * moveSpeed * controlMultiplier;
+        rb.linearVelocity = new Vector2(targetVelX, rb.linearVelocity.y);
 
         if (grabbedObject != null)
         {
             grabbedObject.FollowPoint(grabPoint.position);
         }
-
-        if (moveInput.x > 0.05f) transform.localScale = new Vector3(1, 1, 1);
-        else if (moveInput.x < -0.05f) transform.localScale = new Vector3(-1, 1, 1);
     }
 
-    private bool CanControlPlayer()
+    private void UpdateVisuals()
+    {
+        animator.SetBool(IsMoving, Mathf.Abs(rb.linearVelocity.x) > 0.1f);
+
+        if (moveInput.x > 0.05f)
+            transform.localScale = new Vector3(1, 1, 1);
+        else if (moveInput.x < -0.05f)
+            transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    private bool CanPlayerMove()
     {
         if (GameManager.instance == null) return false;
-        
-        if (GameManager.instance.CurrentState != GameManager.GameState.Playing)
-        {
-            return false;
-        }
-        
-        if (waitingRespawn)
-        {
-            return false;
-        }
-        
+        if (GameManager.instance.CurrentState != GameManager.GameState.Playing) return false;
+        if (isAbducted) return false;
+        if (!canMove) return false;
         return true;
     }
 
     private void OnMove(InputAction.CallbackContext ctx)
     {
-        if (!CanControlPlayer())
+        if (!CanPlayerMove())
         {
             moveInput = Vector2.zero;
-            Debug.Log("[Player2DController] Move blocked - cannot control player");
             return;
         }
-
         moveInput = ctx.ReadValue<Vector2>();
-        Debug.Log($"[Player2DController] Move input: {moveInput}");
     }
 
-    private void OnJump(InputAction.CallbackContext ctx)
+    private void OnJumpPressed(InputAction.CallbackContext ctx)
     {
-        if (!CanControlPlayer())
-        {
-            jumpRequested = false;
-            Debug.Log("[Player2DController] Jump blocked - cannot control player");
-            return;
-        }
-
-        if (ctx.performed)
-        {
-            jumpRequested = true;
-            Debug.Log("[Player2DController] Jump requested");
-        }
+        if (!CanPlayerMove()) return;
+        jumpHeld = true;
+        jumpBufferCounter = jumpBufferTime;
     }
 
-    private void OnGrabPerformed(InputAction.CallbackContext ctx)
+    private void OnJumpReleased(InputAction.CallbackContext ctx)
     {
-        if (!CanControlPlayer())
-        {
-            grabHeld = false;
-            return;
-        }
-
-        grabHeld = true;
-    }
-
-    private void OnGrabCanceled(InputAction.CallbackContext ctx)
-    {
-        if (!CanControlPlayer())
-        {
-            grabHeld = false;
-            return;
-        }
-
-        grabHeld = false;
-    }
-
-    private void CheckGround()
-    {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer);
-        animator.SetBool(IsGrounded, isGrounded);
+        jumpHeld = false;
     }
 
     private void TryGrab()
     {
+        if (!CanPlayerMove() || grabbedObject != null) return;
+
         Collider2D col = Physics2D.OverlapCircle(grabPoint.position, grabRange, grabbableLayer);
         if (col != null)
         {
@@ -252,27 +220,79 @@ public class Player2DController : MonoBehaviour
             if (grabbable != null)
             {
                 grabbedObject = grabbable;
-                grabbedObject.Grab(grabPoint, playerCollider); 
+                grabbedObject.Grab(grabPoint, playerCollider);
             }
         }
     }
 
-    private void Throw()
+    private void TryThrow()
     {
+        if (grabbedObject == null) return;
+
         Vector2 dir = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
-        grabbedObject.Throw(dir * throwForce, playerCollider); 
+        grabbedObject.Throw(dir * throwForce, playerCollider);
         grabbedObject = null;
     }
-    
+
+    public void BeAbducted()
+    {
+        isAbducted = true;
+        canMove = false;
+        
+        moveInput = Vector2.zero;
+        jumpHeld = false;
+        jumpBufferCounter = 0f;
+        
+        ForceReleaseGrabbedObject();
+        
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        
+        Debug.Log("[Player2DController] Player abducted");
+    }
+
+    public void ReleaseFromAbduction()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        
+        isAbducted = false;
+        canMove = true;
+        
+        Debug.Log("[Player2DController] Player released from abduction");
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
+
     public void ForceReleaseGrabbedObject()
     {
         if (grabbedObject != null)
         {
-            Debug.Log("[Player2DController] Force releasing grabbed object");
             grabbedObject.Throw(Vector2.zero, playerCollider);
             grabbedObject = null;
-            grabHeld = false;
         }
+    }
+
+    [System.Obsolete("Use BeAbducted() and ReleaseFromAbduction() instead")]
+    public void CallRespawn(bool isWaitingRespawn, Vector3 position, bool isMovingPlayer = false)
+    {
+        if (isWaitingRespawn)
+            BeAbducted();
+        else
+            ReleaseFromAbduction();
+
+        if (isMovingPlayer)
+            SetPosition(position);
     }
 
     private void OnDrawGizmosSelected()
