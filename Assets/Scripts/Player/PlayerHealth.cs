@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
     private int currentLives = 3;
 
     [Header("Respawn Settings")]
-    [SerializeField] private float invincibilityDuration = 2f;
+    [SerializeField] private float invincibilityDuration = 6f;
     [SerializeField] private float blinkInterval = 0.1f;
 
     private bool isInvincible = false;
@@ -44,20 +44,28 @@ public class PlayerHealth : MonoBehaviour
         if (waypoints.Length > 0)
         {
             currentWaypoint = waypoints[0];
+            Debug.Log($"[PlayerHealth] Initial waypoint: {currentWaypoint.name}");
         }
     }
 
     public void SetCurrentWaypoint(Waypoint waypoint)
     {
         currentWaypoint = waypoint;
+        Debug.Log($"[PlayerHealth] Waypoint changed to: {waypoint.name}");
     }
 
     public void TakeDamage(int damage = 1)
     {
-        if (isInvincible || !IsAlive) return;
+        if (isInvincible || !IsAlive)
+        {
+            Debug.Log($"[PlayerHealth] Damage blocked - Invincible: {isInvincible}, Alive: {IsAlive}");
+            return;
+        }
 
         currentLives -= damage;
         currentLives = Mathf.Max(0, currentLives);
+
+        Debug.Log($"[PlayerHealth] Took {damage} damage. Lives: {currentLives}");
 
         if (HealthUI.instance != null)
         {
@@ -81,24 +89,30 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
+        Debug.Log($"[PlayerHealth] Respawn - Waypoint: {currentWaypoint?.name ?? "NULL"}");
+        
         if (currentWaypoint != null)
         {
-            transform.position = currentWaypoint.GetRespawnPosition();
-            // set X
-            // Call abduction
+            if (GameManager.instance != null)
+            {
+                StartCoroutine(GameManager.instance.RespawnWithAbduction(currentWaypoint));
+                StartInvincibility();
+            }
+            else
+            {
+                Debug.LogError("[PlayerHealth] GameManager.instance is NULL!");
+            }
         }
-
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
+        else
         {
-            rb.linearVelocity = Vector2.zero;
+            Debug.LogError("[PlayerHealth] No waypoint for respawn!");
         }
-
-        StartInvincibility();
     }
 
     private void Die()
     {
+        Debug.Log("[PlayerHealth] Player died - Game Over");
+        
         if (GameManager.instance != null)
         {
             GameManager.instance.SetGameState(GameManager.GameState.GameOver);
@@ -128,14 +142,18 @@ public class PlayerHealth : MonoBehaviour
 
     private void StartInvincibility()
     {
-        if (isInvincible) return;
+        if (isInvincible)
+        {
+            Debug.Log("[PlayerHealth] Invincibility restarted");
+            StopAllCoroutines();
+        }
         
-        StopAllCoroutines();
         StartCoroutine(InvincibilityRoutine());
     }
 
     private System.Collections.IEnumerator InvincibilityRoutine()
     {
+        Debug.Log($"[PlayerHealth] Invincibility for {invincibilityDuration}s");
         isInvincible = true;
         float elapsed = 0f;
         bool visible = true;
@@ -158,5 +176,6 @@ public class PlayerHealth : MonoBehaviour
         }
 
         isInvincible = false;
+        Debug.Log("[PlayerHealth] Invincibility ended");
     }
 }

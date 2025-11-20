@@ -6,6 +6,8 @@ public class DeathZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log($"[DeathZone] Player entered at: {other.transform.position}");
+            
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
@@ -15,6 +17,7 @@ public class DeathZone : MonoBehaviour
 
         if (other.CompareTag("Key"))
         {
+            Debug.Log("[DeathZone] Key fell into DeathZone");
             Grabbable2D grabbable = other.GetComponent<Grabbable2D>();
             if (grabbable != null && !grabbable.IsGrabbed)
                 grabbable.ResetPositionToInitial();

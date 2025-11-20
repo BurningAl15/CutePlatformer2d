@@ -52,18 +52,36 @@ public class Player2DController : MonoBehaviour
         
         playerCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
+        
+        Debug.Log("[Player2DController] Awake completed");
     }
 
-    public void CallRespawn(bool isWaitingRespawn, Vector3 position, bool isMovingPlayer=false)
+    public void CallRespawn(bool isWaitingRespawn, Vector3 position, bool isMovingPlayer = false)
     {
+        Debug.Log($"[Player2DController] CallRespawn - Waiting: {isWaitingRespawn}, Position: {position}, Moving: {isMovingPlayer}");
         waitingRespawn = isWaitingRespawn;
-        if(isMovingPlayer)
+        
+        if (waitingRespawn)
+        {
+            moveInput = Vector2.zero;
+            jumpRequested = false;
+            grabHeld = false;
+        }
+        
+        if (isMovingPlayer)
             transform.position = position;
     }
 
     public void PlayerRigidbody(bool isKinematic)
     {
-        rb.bodyType = isKinematic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        RigidbodyType2D newType = isKinematic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        Debug.Log($"[Player2DController] Changing Rigidbody from {rb.bodyType} to {newType}");
+        rb.bodyType = newType;
+        
+        if (!isKinematic)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     private void OnEnable()
@@ -77,6 +95,8 @@ public class Player2DController : MonoBehaviour
 
         input.Player.Grab.performed += OnGrabPerformed;
         input.Player.Grab.canceled += OnGrabCanceled;
+        
+        Debug.Log("[Player2DController] Input enabled");
     }
 
     private void OnDisable()
@@ -90,11 +110,18 @@ public class Player2DController : MonoBehaviour
         input.Player.Grab.canceled -= OnGrabCanceled;
 
         input.Disable();
+        
+        Debug.Log("[Player2DController] Input disabled");
     }
 
     private void Update()
     {
         CheckGround();
+
+        if (!CanControlPlayer())
+        {
+            return;
+        }
 
         if (grabHeld && grabbedObject == null)
         {
@@ -108,6 +135,16 @@ public class Player2DController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!CanControlPlayer())
+        {
+            if (rb.bodyType == RigidbodyType2D.Dynamic)
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            }
+            animator.SetBool(IsMoving, false);
+            return;
+        }
+
         float targetVelX = moveInput.x * moveSpeed;
         rb.linearVelocity = new Vector2(targetVelX, rb.linearVelocity.y);
 
@@ -132,33 +169,72 @@ public class Player2DController : MonoBehaviour
         else if (moveInput.x < -0.05f) transform.localScale = new Vector3(-1, 1, 1);
     }
 
+    private bool CanControlPlayer()
+    {
+        if (GameManager.instance == null) return false;
+        
+        if (GameManager.instance.CurrentState != GameManager.GameState.Playing)
+        {
+            return false;
+        }
+        
+        if (waitingRespawn)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
     private void OnMove(InputAction.CallbackContext ctx)
     {
-        if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            if(waitingRespawn)
-                moveInput = ctx.ReadValue<Vector2>();
+        if (!CanControlPlayer())
+        {
+            moveInput = Vector2.zero;
+            Debug.Log("[Player2DController] Move blocked - cannot control player");
+            return;
+        }
+
+        moveInput = ctx.ReadValue<Vector2>();
+        Debug.Log($"[Player2DController] Move input: {moveInput}");
     }
 
     private void OnJump(InputAction.CallbackContext ctx)
     {
-        if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            if(waitingRespawn)
-                if (ctx.performed)
-                    jumpRequested = true;
+        if (!CanControlPlayer())
+        {
+            jumpRequested = false;
+            Debug.Log("[Player2DController] Jump blocked - cannot control player");
+            return;
+        }
+
+        if (ctx.performed)
+        {
+            jumpRequested = true;
+            Debug.Log("[Player2DController] Jump requested");
+        }
     }
 
     private void OnGrabPerformed(InputAction.CallbackContext ctx)
     {
-        if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            if(waitingRespawn)
-                grabHeld = true;
+        if (!CanControlPlayer())
+        {
+            grabHeld = false;
+            return;
+        }
+
+        grabHeld = true;
     }
 
     private void OnGrabCanceled(InputAction.CallbackContext ctx)
     {
-        if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            if(waitingRespawn)
-                grabHeld = false;
+        if (!CanControlPlayer())
+        {
+            grabHeld = false;
+            return;
+        }
+
+        grabHeld = false;
     }
 
     private void CheckGround()
@@ -186,6 +262,17 @@ public class Player2DController : MonoBehaviour
         Vector2 dir = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
         grabbedObject.Throw(dir * throwForce, playerCollider); 
         grabbedObject = null;
+    }
+    
+    public void ForceReleaseGrabbedObject()
+    {
+        if (grabbedObject != null)
+        {
+            Debug.Log("[Player2DController] Force releasing grabbed object");
+            grabbedObject.Throw(Vector2.zero, playerCollider);
+            grabbedObject = null;
+            grabHeld = false;
+        }
     }
 
     private void OnDrawGizmosSelected()

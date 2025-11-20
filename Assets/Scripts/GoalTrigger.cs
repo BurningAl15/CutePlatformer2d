@@ -8,7 +8,7 @@ public class GoalTrigger : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            GameManager.instance.SetGameState(GameManager.GameState.Victory);
+            StartCoroutine(GameManager.instance.VictoryWithAbduction());
         }
 
         if (AudioManager.instance != null)

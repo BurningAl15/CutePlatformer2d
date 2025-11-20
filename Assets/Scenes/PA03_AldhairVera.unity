@@ -324,11 +324,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   abductionPosition: {fileID: 1707442198}
   abductionMask: {fileID: 65269725}
-  yMinScale: 0
-  yMaxScale: 4
-  yMinPos: 0
-  yMaxPos: -18.34
-  duration: 2
+  abductionLight: {fileID: 1287916489}
+  globalLight: {fileID: 619394801}
+  groundAndPlayerLayer:
+    serializedVersion: 2
+    m_Bits: 192
+  maxRaycastDistance: 50
+  groundOffset: 0.5
+  abductionLightUpStartTime: 0
+  landingStartTime: 0.116097555
+  globalLightStartTime: 1.56
+  waitStartTime: 1.9344293
+  abductionLightDownStartTime: 2.15
+  retractionStartTime: 2.15
+  landingDuration: 1.9969512
+  retractionDuration: 0.10854825
+  scaleMultiplier: 1
   animCurve_Land:
     serializedVersion: 2
     m_Curve:
@@ -377,8 +388,61 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  light: {fileID: 1287916489}
-  globalLight: {fileID: 619394801}
+  abductionLightMaxIntensity: 1
+  abductionLightFadeDuration: 0.1
+  abductionLightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animateGlobalLight: 1
+  darkIntensity: 0.05
+  normalIntensity: 0.65
+  globalLightFadeDuration: 0.54
+  globalLightFadeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  waitAfterLanding: 0.2
 --- !u!1001 &113792614
 PrefabInstance:
   m_ObjectHideFlags: 0
