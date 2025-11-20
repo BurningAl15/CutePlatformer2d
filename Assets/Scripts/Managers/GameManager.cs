@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,11 +7,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public enum GameState { Playing, Paused, GameOver, Victory }
+    public enum GameState { Initialize, Load, Playing, Paused, GameOver, Victory }
     
-    private GameState currentState = GameState.Playing;
+    private GameState currentState = GameState.Initialize;
     
     public GameState CurrentState => currentState;
+
+    [SerializeField] private AbductionEffect abductionEffect;
 
     private void Awake()
     {
@@ -21,6 +25,34 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(CallCore());
+    }
+
+    private IEnumerator CallCore()
+    {
+        yield return StartCoroutine(Initialize());
+        yield return null;
+        yield return StartCoroutine(Load());
+        yield return null;
+        currentState = GameState.Playing;
+    }
+    
+    private IEnumerator Initialize()
+    {
+        currentState = GameState.Initialize;
+        abductionEffect.Initialize();
+        yield return null;
+    }
+    
+    private IEnumerator Load()
+    {
+        currentState = GameState.Load;
+        yield return StartCoroutine(abductionEffect.AbductionAnim_Land());
+        yield return null;
     }
 
     public void SetGameState(GameState newState)

@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player2DController : MonoBehaviour
 {
+    public static Player2DController instance;
+    
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
     private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
 
@@ -35,14 +37,33 @@ public class Player2DController : MonoBehaviour
     
     private Collider2D playerCollider;
 
+    private bool waitingRespawn = false;
+
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this.gameObject);
+        
         rb = GetComponent<Rigidbody2D>();
 
         input = new InputSystem_Actions();
         
         playerCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
+    }
+
+    public void CallRespawn(bool isWaitingRespawn, Vector3 position, bool isMovingPlayer=false)
+    {
+        waitingRespawn = isWaitingRespawn;
+        if(isMovingPlayer)
+            transform.position = position;
+    }
+
+    public void PlayerRigidbody(bool isKinematic)
+    {
+        rb.bodyType = isKinematic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
     }
 
     private void OnEnable()
@@ -114,26 +135,30 @@ public class Player2DController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext ctx)
     {
         if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            moveInput = ctx.ReadValue<Vector2>();
+            if(waitingRespawn)
+                moveInput = ctx.ReadValue<Vector2>();
     }
 
     private void OnJump(InputAction.CallbackContext ctx)
     {
         if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            if (ctx.performed)
-                jumpRequested = true;
+            if(waitingRespawn)
+                if (ctx.performed)
+                    jumpRequested = true;
     }
 
     private void OnGrabPerformed(InputAction.CallbackContext ctx)
     {
         if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            grabHeld = true;
+            if(waitingRespawn)
+                grabHeld = true;
     }
 
     private void OnGrabCanceled(InputAction.CallbackContext ctx)
     {
         if(GameManager.instance.CurrentState == GameManager.GameState.Playing)
-            grabHeld = false;
+            if(waitingRespawn)
+                grabHeld = false;
     }
 
     private void CheckGround()

@@ -84,6 +84,8 @@ public class PlayerHealth : MonoBehaviour
         if (currentWaypoint != null)
         {
             transform.position = currentWaypoint.GetRespawnPosition();
+            // set X
+            // Call abduction
         }
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
