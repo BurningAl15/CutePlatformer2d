@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Player2DController))]
 public class PlayerHealth : MonoBehaviour
@@ -95,8 +96,7 @@ public class PlayerHealth : MonoBehaviour
         {
             if (GameManager.instance != null)
             {
-                StartCoroutine(GameManager.instance.RespawnWithAbduction(currentWaypoint));
-                StartInvincibility();
+                StartCoroutine(RespawnAnimation());
             }
             else
             {
@@ -107,6 +107,13 @@ public class PlayerHealth : MonoBehaviour
         {
             Debug.LogError("[PlayerHealth] No waypoint for respawn!");
         }
+    }
+
+    IEnumerator RespawnAnimation()
+    {
+        yield return new WaitForSeconds(.1f);
+        StartCoroutine(GameManager.instance.RespawnWithAbduction(currentWaypoint));
+        StartInvincibility();
     }
 
     private void Die()
@@ -151,7 +158,7 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(InvincibilityRoutine());
     }
 
-    private System.Collections.IEnumerator InvincibilityRoutine()
+    private IEnumerator InvincibilityRoutine()
     {
         Debug.Log($"[PlayerHealth] Invincibility for {invincibilityDuration}s");
         isInvincible = true;

@@ -19,7 +19,7 @@ public class DeathZone : MonoBehaviour
         {
             Debug.Log("[DeathZone] Key fell into DeathZone");
             Grabbable2D grabbable = other.GetComponent<Grabbable2D>();
-            if (grabbable != null && !grabbable.IsGrabbed)
+            if (grabbable != null)
                 grabbable.ResetPositionToInitial();
         }
     }

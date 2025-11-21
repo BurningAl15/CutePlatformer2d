@@ -10,6 +10,8 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private Sprite emptyLifeSprite;
     [SerializeField] private List<Image> lifeIcons = new List<Image>();
 
+    [SerializeField] private float hurtSize;
+    
     private void Awake()
     {
         if (instance == null)
@@ -31,6 +33,7 @@ public class HealthUI : MonoBehaviour
                 if (fullLifeSprite != null)
                 {
                     lifeIcons[i].sprite = fullLifeSprite;
+                    lifeIcons[i].transform.localScale = Vector2.one;
                 }
                 lifeIcons[i].enabled = true;
             }
@@ -39,6 +42,7 @@ public class HealthUI : MonoBehaviour
                 if (emptyLifeSprite != null)
                 {
                     lifeIcons[i].sprite = emptyLifeSprite;
+                    lifeIcons[i].transform.localScale = Vector2.one * hurtSize;
                 }
                 else
                 {

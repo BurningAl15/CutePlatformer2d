@@ -6,7 +6,9 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private Vector3 respawnOffset = Vector3.zero;
 
     [SerializeField] Animator animator;
-
+    [SerializeField] private ParticleSystem particleSystem;
+    [SerializeField] private bool isActive;
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -19,17 +21,25 @@ public class Waypoint : MonoBehaviour
     {
         if (playerHealth == null) return;
         
+        if (!isActive)
+        {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX("Checkpoint");
+            }
+            
+            if(particleSystem != null)
+                particleSystem.Play();
+
+            isActive = true;
+        }
+        
         if(animator != null)
-            animator.SetBool(IsActive, true);
+            animator.SetBool(IsActive, isActive);
 
         DeactivateAllOtherWaypoints();
 
         playerHealth.SetCurrentWaypoint(this);
-
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySFX("Checkpoint");
-        }
     }
 
     private void DeactivateAllOtherWaypoints()
@@ -44,10 +54,11 @@ public class Waypoint : MonoBehaviour
         }
     }
 
-    public void Deactivate()
+    private void Deactivate()
     {
+        isActive = false;
         if(animator != null)
-            animator.SetBool(IsActive, false);
+            animator.SetBool(IsActive, isActive);
     }
 
     public Vector3 GetRespawnPosition()

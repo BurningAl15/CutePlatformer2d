@@ -62,7 +62,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 4650ab6ba0d404a3fbb4dcaec9640b91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,6 +109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Waypoint
   respawnOffset: {x: 0, y: 0, z: 0}
   animator: {fileID: 2988252908875259314}
+  particleSystem: {fileID: 5478256679706772895}
+  isActive: 0
 --- !u!61 &5930784539073461036
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -261,6 +263,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c7e07211f68d4956b66f800830cf9db, type: 3}
+--- !u!198 &5478256679706772895 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4087825660698190225, guid: 7c7e07211f68d4956b66f800830cf9db, type: 3}
+  m_PrefabInstance: {fileID: 8411724284664292366}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5686865709559365668 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4204036107732771882, guid: 7c7e07211f68d4956b66f800830cf9db, type: 3}
