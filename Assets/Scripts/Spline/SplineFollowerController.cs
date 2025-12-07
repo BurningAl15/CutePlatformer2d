@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.Events;
@@ -14,7 +15,7 @@ public class SplineFollowerController : MonoBehaviour
     private bool hasCompleted = false;
     private bool wasPlaying = false;
 
-    [SerializeField] private Button playBtn, quitBtn;
+    [SerializeField] private CanvasGroup canvasGroup;
     
     void Update()
     {
@@ -33,8 +34,9 @@ public class SplineFollowerController : MonoBehaviour
 
     public void StartMovement()
     {
-        playBtn.interactable = false;
-        quitBtn.interactable = false;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        
         if (animate == null) return;
         
         hasCompleted = false;
@@ -53,6 +55,20 @@ public class SplineFollowerController : MonoBehaviour
     private void OnSequenceComplete()
     {
         Debug.Log("Secuencia del spline completada!");
+        StartCoroutine(CanvasGroupFade());
         onSequenceComplete?.Invoke();
+    }
+
+    IEnumerator CanvasGroupFade()
+    {
+        canvasGroup.alpha = 1;
+        float duration = .2f;
+        for (float i = 0; i < duration; i += Time.deltaTime)
+        {
+            canvasGroup.alpha = 1 - i/duration;
+            yield return null;
+        }
+        canvasGroup.alpha = 0;
+        yield return null;
     }
 }
