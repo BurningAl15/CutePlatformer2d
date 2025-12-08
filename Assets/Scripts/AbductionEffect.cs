@@ -143,8 +143,13 @@ public class AbductionEffect : MonoBehaviour
 
         yield return RetractBeam(retractDuration, pullPlayer: true);
 
+        yield return FadeLight(beamLight, beamLightIntensity, 0f, lightFadeDuration);
+    
+        yield return FadeLight(globalLight, darkIntensity, normalIntensity, lightFadeDuration);
+
         Debug.Log("[AbductionEffect] === VICTORY SEQUENCE END ===");
     }
+
 
     private IEnumerator DeployBeam(float duration, bool followPlayer)
     {

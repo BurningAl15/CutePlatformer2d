@@ -117,6 +117,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        // Application.Quit();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex-1);
     }
 }

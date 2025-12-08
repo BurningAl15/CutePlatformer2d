@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    [Header("Collectable Settings")]
+    [Header("Legacy Collectable")]
     [SerializeField] private int pointValue = 1;
     [SerializeField] private bool autoRegister = true;
 
@@ -10,7 +10,7 @@ public class Collectable : MonoBehaviour
     [SerializeField] private float rotationSpeed = 100f;
     [SerializeField] private float bobSpeed = 2f;
     [SerializeField] private float bobHeight = 0.2f;
-
+    
     private Vector3 startPosition;
     private bool isCollected = false;
 
@@ -50,7 +50,12 @@ public class Collectable : MonoBehaviour
 
         if (LevelManager.instance != null)
         {
-            LevelManager.instance.CollectItem();
+            LevelManager.instance.CollectItem("star");
+        }
+        
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("Collect");
         }
 
         Destroy(gameObject);

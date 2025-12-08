@@ -125,8 +125,8 @@ public class PopupManager : MonoBehaviour
     {
         if (LevelManager.instance == null || textComponent == null) return false;
 
-        int current = LevelManager.instance.CollectablesCollected;
-        int total = LevelManager.instance.TotalCollectables;
+        int current = LevelManager.instance.CollectedStars;
+        int total = LevelManager.instance.TotalStars;
         bool hasAll = current >= total;
 
         textComponent.text = $"{current}/{total}";

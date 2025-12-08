@@ -71,4 +71,13 @@ public class SplineFollowerController : MonoBehaviour
         canvasGroup.alpha = 0;
         yield return null;
     }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }

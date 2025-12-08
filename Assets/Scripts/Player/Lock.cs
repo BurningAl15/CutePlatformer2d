@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -31,7 +30,6 @@ public class Lock : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
         seq.Append(transform.DOScale(1.5f, 0.5f));
-        // seq.Join(transform.DOLocalMove(2f, .5f));
         seq.Append(transform.DOScale(0f, 0.5f));
 
         yield return seq.WaitForCompletion();
@@ -49,7 +47,6 @@ public class Lock : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         key.SetActive(false);
-        // gameObject.SetActive(false);
         StartCoroutine(SequenceAndWait(gameObject.transform));
     }
 }

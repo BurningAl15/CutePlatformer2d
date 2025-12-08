@@ -5,13 +5,38 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    private int totalCollectablesInLevel;
-    private int collectablesCollected = 0;
-    private List<Collectable> allCollectables = new List<Collectable>();
+    [System.Serializable]
+    public class CollectableCounter
+    {
+        public string collectableType;
+        public int total;
+        public int collected;
 
-    public int TotalCollectables => totalCollectablesInLevel;
-    public int CollectablesCollected => collectablesCollected;
-    public bool AllCollectablesCollected => collectablesCollected >= totalCollectablesInLevel;
+        public CollectableCounter(string type)
+        {
+            collectableType = type;
+            total = 0;
+            collected = 0;
+        }
+    }
+
+    private Dictionary<string, CollectableCounter> counters = new Dictionary<string, CollectableCounter>();
+    
+    private int totalStars;
+    private int collectedStars;
+    
+    public int TotalStars => totalStars;
+    public int CollectedStars => collectedStars;
+    public bool AllStarsCollected => collectedStars >= totalStars;
+
+    [System.Obsolete("Use TotalStars instead")]
+    public int TotalCollectables => totalStars;
+    
+    [System.Obsolete("Use CollectedStars instead")]
+    public int CollectablesCollected => collectedStars;
+    
+    [System.Obsolete("Use AllStarsCollected instead")]
+    public bool AllCollectablesCollected => collectedStars >= totalStars;
 
     private void Awake()
     {
@@ -32,39 +57,108 @@ public class LevelManager : MonoBehaviour
 
     private void RegisterAllCollectables()
     {
-        allCollectables.Clear();
-        allCollectables.AddRange(FindObjectsByType<Collectable>(FindObjectsSortMode.None));
-        totalCollectablesInLevel = allCollectables.Count;
-        collectablesCollected = 0;
+        counters.Clear();
+        
+        Collectable[] oldCollectables = FindObjectsByType<Collectable>(FindObjectsSortMode.None);
+        foreach (var collectable in oldCollectables)
+        {
+            RegisterCollectableByType("star");
+        }
+        
+        CollectableBase[] newCollectables = FindObjectsByType<CollectableBase>(FindObjectsSortMode.None);
+        foreach (var collectable in newCollectables)
+        {
+            string typeID = GetCollectableTypeID(collectable);
+            RegisterCollectableByType(typeID);
+        }
+        
+        totalStars = GetTotalByType("star");
+        collectedStars = 0;
 
+        UpdateUI();
+        
+        LogCollectablesSummary();
+    }
+
+    private string GetCollectableTypeID(CollectableBase collectable)
+    {
+        if (collectable is StarCollectable)
+            return "star";
+        else if (collectable is CharacterOrbCollectable)
+            return "orb";
+        else if (collectable is BadgeCollectable)
+            return "badge";
+        else
+            return "unknown";
+    }
+
+    private void RegisterCollectableByType(string typeID)
+    {
+        if (!counters.ContainsKey(typeID))
+        {
+            counters[typeID] = new CollectableCounter(typeID);
+        }
+        
+        counters[typeID].total++;
+    }
+
+    public void CollectItem(string collectableTypeID)
+    {
+        if (!counters.ContainsKey(collectableTypeID))
+        {
+            Debug.LogWarning($"[LevelManager] Unknown collectable type: {collectableTypeID}");
+            return;
+        }
+
+        counters[collectableTypeID].collected++;
+
+        if (collectableTypeID == "star")
+        {
+            collectedStars++;
+            UpdateUI();
+        }
+
+        LogCollection(collectableTypeID);
+    }
+
+    public int GetTotalByType(string typeID)
+    {
+        return counters.ContainsKey(typeID) ? counters[typeID].total : 0;
+    }
+
+    public int GetCollectedByType(string typeID)
+    {
+        return counters.ContainsKey(typeID) ? counters[typeID].collected : 0;
+    }
+
+    private void UpdateUI()
+    {
         if (CollectableUI.instance != null)
         {
-            CollectableUI.instance.UpdateDisplay(collectablesCollected, totalCollectablesInLevel);
+            CollectableUI.instance.UpdateDisplay(collectedStars, totalStars);
         }
     }
 
-    public void RegisterCollectable(Collectable collectable)
+    private void LogCollectablesSummary()
     {
-        if (!allCollectables.Contains(collectable))
+        Debug.Log("=== [LevelManager] Collectables Summary ===");
+        foreach (var kvp in counters)
         {
-            allCollectables.Add(collectable);
-            totalCollectablesInLevel = allCollectables.Count;
+            Debug.Log($"  {kvp.Key}: {kvp.Value.total} total");
         }
     }
 
-    public void CollectItem()
+    private void LogCollection(string typeID)
     {
-        collectablesCollected++;
-
-        if (CollectableUI.instance != null)
+        if (counters.ContainsKey(typeID))
         {
-            CollectableUI.instance.UpdateDisplay(collectablesCollected, totalCollectablesInLevel);
+            var counter = counters[typeID];
+            Debug.Log($"[LevelManager] {typeID} collected: {counter.collected}/{counter.total}");
         }
+    }
 
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySFX("Collect");
-        }
+    public void RegisterCollectable(MonoBehaviour collectable)
+    {
     }
 }
 
