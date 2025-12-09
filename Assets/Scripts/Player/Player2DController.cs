@@ -49,6 +49,8 @@ public class Player2DController : MonoBehaviour
     private bool isAbducted;
     private bool canMove = true;
 
+    public bool IsAbducted => isAbducted;
+    
     private void Awake()
     {
         if (instance == null)

@@ -1,0 +1,572 @@
+fileFormatVersion: 2
+guid: d362f2852753548969d60173124efa04
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8736904977753043298
+    second: IconFatCatGameStudio_0
+  - first:
+      213: 2520998578797912347
+    second: IconFatCatGameStudio_1
+  - first:
+      213: -6992482804193628765
+    second: IconFatCatGameStudio_2
+  - first:
+      213: 1975584874384449909
+    second: IconFatCatGameStudio_3
+  - first:
+      213: 7135462580727105397
+    second: IconFatCatGameStudio_4
+  - first:
+      213: -4879595247800921816
+    second: IconFatCatGameStudio_5
+  - first:
+      213: -1078367815287742691
+    second: IconFatCatGameStudio_6
+  - first:
+      213: -8178383884799450484
+    second: IconFatCatGameStudio_7
+  - first:
+      213: -4290689496270380907
+    second: IconFatCatGameStudio_8
+  - first:
+      213: 6272343544287201642
+    second: IconFatCatGameStudio_9
+  - first:
+      213: -8464741379344072314
+    second: IconFatCatGameStudio_10
+  - first:
+      213: -8161888740775921558
+    second: IconFatCatGameStudio_11
+  - first:
+      213: 7826133306095282894
+    second: IconFatCatGameStudio_12
+  - first:
+      213: 2691977618307771899
+    second: IconFatCatGameStudio_13
+  - first:
+      213: 4259441093394166634
+    second: IconFatCatGameStudio_14
+  - first:
+      213: -8344100004226665794
+    second: IconFatCatGameStudio_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_0
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 128
+        width: 338
+        height: 332
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 261ff4389c8bf3970800000000000000
+      internalID: 8736904977753043298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_1
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 76
+        width: 32
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b11a380c9d26cf220800000000000000
+      internalID: 2520998578797912347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_2
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 76
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ade206ffe5b5fe90800000000000000
+      internalID: -6992482804193628765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_3
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 76
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 571e155e9ffaa6b10800000000000000
+      internalID: 1975584874384449909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_4
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 76
+        width: 41
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 577c4507961460360800000000000000
+      internalID: 7135462580727105397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_5
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 76
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 821542fa9f1384cb0800000000000000
+      internalID: -4879595247800921816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_6
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 76
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1f5f887f2ed801f0800000000000000
+      internalID: -1078367815287742691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_7
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 41
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c82efbd003b808e80800000000000000
+      internalID: -8178383884799450484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_8
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 41
+        width: 21
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 590ed4dd2a86474c0800000000000000
+      internalID: -4290689496270380907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_9
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 41
+        width: 26
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a690472a837db0750800000000000000
+      internalID: 6272343544287201642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_10
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 41
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68185a84092378a80800000000000000
+      internalID: -8464741379344072314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_11
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 41
+        width: 39
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a687acd0f652bbe80800000000000000
+      internalID: -8161888740775921558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_12
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 41
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecaa9aaf6c20c9c60800000000000000
+      internalID: 7826133306095282894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_13
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 41
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfd69829163db5520800000000000000
+      internalID: 2691977618307771899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_14
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 41
+        width: 8
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a63f5716b139c1b30800000000000000
+      internalID: 4259441093394166634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IconFatCatGameStudio_15
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 41
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb2fbbd414dc33c80800000000000000
+      internalID: -8344100004226665794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      IconFatCatGameStudio_0: 8736904977753043298
+      IconFatCatGameStudio_1: 2520998578797912347
+      IconFatCatGameStudio_10: -8464741379344072314
+      IconFatCatGameStudio_11: -8161888740775921558
+      IconFatCatGameStudio_12: 7826133306095282894
+      IconFatCatGameStudio_13: 2691977618307771899
+      IconFatCatGameStudio_14: 4259441093394166634
+      IconFatCatGameStudio_15: -8344100004226665794
+      IconFatCatGameStudio_2: -6992482804193628765
+      IconFatCatGameStudio_3: 1975584874384449909
+      IconFatCatGameStudio_4: 7135462580727105397
+      IconFatCatGameStudio_5: -4879595247800921816
+      IconFatCatGameStudio_6: -1078367815287742691
+      IconFatCatGameStudio_7: -8178383884799450484
+      IconFatCatGameStudio_8: -4290689496270380907
+      IconFatCatGameStudio_9: 6272343544287201642
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

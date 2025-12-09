@@ -40,9 +40,15 @@ public class Collectable : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            if (Player2DController.instance != null && Player2DController.instance.IsAbducted)
+            {
+                return;
+            }
+
             Collect();
         }
     }
+
 
     private void Collect()
     {

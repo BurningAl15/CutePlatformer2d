@@ -62,9 +62,15 @@ public abstract class CollectableBase : MonoBehaviour, ICollectable
 
         if (other.CompareTag("Player"))
         {
+            if (Player2DController.instance != null && Player2DController.instance.IsAbducted)
+            {
+                return;
+            }
+
             Collect();
         }
     }
+
 
     public virtual void Collect()
     {
